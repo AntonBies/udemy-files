@@ -7,9 +7,9 @@
 // const array1 = ['a', 'b', 'c', 'x'];
 // const array2 = ['z', 'y', 'x'];
 
-const containCommonItemSet = (array1, array2) => {
-    const set1 = new Set(array1);
-    const set2 = new Set(array2);
+const containCommonItemSet = (arr1, arr2) => {
+    const set1 = new Set(arr1);
+    const set2 = new Set(arr2);
 
     for (let item of set1) {
         if (set2.has(item)) return true;
@@ -18,13 +18,13 @@ const containCommonItemSet = (array1, array2) => {
     return false;
 };
 
-const containCommonItemObject = (array1, array2) => {
-    const object1 = array1.reduce((acc, cur) => {
+const containCommonItemObject = (arr1, arr2) => {
+    const object1 = arr1.reduce((acc, cur) => {
         acc[cur] = true;
         return acc;
     }, {});
 
-    for (let item of array2) {
+    for (let item of arr2) {
         if (object1[item]) return true;
     }
 
@@ -34,7 +34,7 @@ const containCommonItemObject = (array1, array2) => {
 const array1 = [];
 const array2 = [];
 
-for (let i = 0; i < 4000000; i++) {
+for (let i = 0; i < 400000; i++) {
     array1.push(i);
     array2.push(-1 - i);
 }
