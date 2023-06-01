@@ -16,9 +16,9 @@ const fibonNoMem = (n) => {
 };
 
 console.time("memoization");
-console.log(fibon(40));
+console.log(fibon(42));
 console.timeEnd("memoization");
 
 console.time("nomem");
-console.log(fibonNoMem(40));
+console.log(fibonNoMem(42));
 console.timeEnd("nomem");
