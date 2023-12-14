@@ -38,36 +38,112 @@ class BinarySearchTree {
         return false;
     }
 
+    getSmallest(node) {
+        if (node.left === null) return node;
+        return this.getSmallest(node.left);
+    }
+
     remove(value) {
-        if (!this.root) return false;
-        let parent = null;
-        let current = this.root;
-        while (current) {
-            if (value < current.value) {
-                parent = current;
-                current = current.left;
-            } else if (value > current.value) {
-                parent = current;
-                current = current.right;
-            } else if (value === current.value) {
-                if (current.right) {
-                    // the hard part - not done
-                    current = current.right;
-                    return false;
-                }
-                if (current.left) {
-                    current = current.left;
-                    if (value < parent.value) parent.left = current;
-                    if (value > parent.value) parent.right = current;
-                    return true;
-                }
-                if (value < parent.value) parent.left = null;
-                if (value > parent.value) parent.right = null;
-                return true;
-            }
-            return false;
+        this.root = this.removeNode(this.root, value);
+    }
+
+    removeNode(node, value) {
+        if (node === null) return null;
+        if (node.value === value) {
+            if (node.left === null && node.right === null) return null;
+            if (node.left === null) return node.right;
+            if (node.right === null) return node.left;
+
+            const newNode = getSmallest(node.right);
+            node.value = newNode.value;
+            node.right = this.removeNode(node.right, newNode.value);
+            return node;
+        } else if (node.value > value) {
+            node.left = this.removeNode(node.left, value);
+            return node;
+        } else {
+            node.right = this.removeNode(node.right, value);
+            return node;
         }
     }
+
+    breadthFirstSearch() {
+        let currentNode = this.root;
+        const list = [];
+        const queue = [];
+        queue.push(currentNode);
+
+        while (queue.length) {
+            currentNode = queue.shift();
+            list.push(currentNode.value);
+            currentNode.left && queue.push(currentNode.left);
+            currentNode.right && queue.push(currentNode.right);
+        }
+    }
+
+    breadthFirstSearchR(queue = [this.root], list = []) {
+        if (!queue.length) return list;
+
+        const currentNode = queue.shift();
+        list.push(currentNode.value);
+        currentNode.left && queue.push(currentNode.left);
+        currentNode.right && queue.push(currentNode.right);
+        return this.breadthFirstSearchR(queue, list);
+    }
+
+    DFSinOrder() {
+        return traverseInOrder(this.root, []);
+    }
+
+    DFSpreOrder() {
+        return traversePreOrder(this.root, []);
+    }
+
+    DFSpostOrder() {
+        return traversePostOrder(this.root, []);
+    }
+}
+
+function traverseInOrder(node, list) {
+    if (node.left) {
+        traverseInOrder(node.left, list);
+    }
+    list.push(node.value);
+    if (node.right) {
+        traverseInOrder(node.right, list);
+    }
+    return list;
+}
+
+function traversePreOrder(node, list) {
+    list.push(node.value);
+    if (node.left) {
+        traversePreOrder(node.left, list);
+    }
+    if (node.right) {
+        traversePreOrder(node.right, list);
+    }
+    return list;
+}
+
+function traversePostOrder(node, list) {
+    if (node.left) {
+        traversePostOrder(node.left, list);
+    }
+    if (node.right) {
+        traversePostOrder(node.right, list);
+    }
+    list.push(node.value);
+    return list;
+}
+
+function isValidBST(root, min = -Infinity, max = Infinity) {
+    if (!root) return true;
+    if (root.value <= min || root.value >= max) return false;
+    return (
+        isValidBST(root.left, min, root.value) &&
+        isValidBST(root.right, root.value, max)
+    );
 }
 
 const tree = new BinarySearchTree();
